@@ -34,7 +34,7 @@ class ModelLoader:
         
         model = self.create_model()
         model_file = [i for i in self.files if "pyt" in i][0]
-        model.load_state_dict(torch.load(self.model_folder+model_file),map_location=torch.device('cpu')) ### In order to convert gpu models to cpu.
+        model.load_state_dict(torch.load(self.model_folder+model_file,map_location=torch.device('cpu'))) ### In order to convert gpu models to cpu.
         model.eval() ## Needed in order to convert from training mode to eval mode.
         return model
     

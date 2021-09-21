@@ -3,11 +3,10 @@ Explain ML Models with streamlit app, using GradCam methods.
 
 Important Note: For deployment on Heroku, I suspected that big models may not work, but if you download this: https://drive.google.com/drive/folders/1rMImsjtxb-MPQFRzHDSdLq1bTrBsNfw5?usp=sharing and upload zip to the heroku, you'll see better example.
 
-![Example Use, In the case that Heroku stops free hosting.](gif/demo.gif)
-
-
 Demo:
 https://explainpytorch.herokuapp.com/
+![Example Use, In the case that Heroku stops free hosting.](gif/demo.gif)
+
 
 ## Upload Model
 Models should be uploaded in a zip file. An example of the folder that could be zipped is model_mnist folder inside models folder. Zip file must contain a single main folder having a model name, and this folder must contain: 

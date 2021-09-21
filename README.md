@@ -7,7 +7,7 @@ https://explainpytorch.herokuapp.com/
 
 
 ## Upload Model
-Models should be uploaded in a zip file. Zip file must contain a single main folder having a model name, and this folder must contain: 
+Models should be uploaded in a zip file. An example of the folder that could be extracted is model_mnist file in this repository. Zip file must contain a single main folder having a model name, and this folder must contain: 
 
 * class_dict.pkl : Dictionary that contains index of prediction and corresponding class. If model predictions are in form of 0,1,2; class_dict.pkl should be ```{0: "Class A", 1:"Class B", 2:"Class C"}```
 

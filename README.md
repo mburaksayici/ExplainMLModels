@@ -1,6 +1,8 @@
 # ExplainMLModels
 Explain ML Models with streamlit app, using GradCam methods.
 
+Important Note: For deployment on Heroku, I suspected that big models may not work, but if you download this: https://drive.google.com/drive/folders/1rMImsjtxb-MPQFRzHDSdLq1bTrBsNfw5?usp=sharing and upload zip to the heroku, you'll see better example.
+
 ![Example Use, In the case that Heroku stops free hosting.](gif/demo.gif)
 
 

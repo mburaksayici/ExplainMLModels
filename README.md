@@ -18,7 +18,7 @@ from torchvision import transforms
 from PIL import Image
 import torch
 
-    def transform_image(image_path):
+def transform_image(image_path):
 data_transforms = transforms.Compose([
     transforms.Resize(256),
     transforms.CenterCrop(224),
@@ -58,3 +58,5 @@ def forward(self, x):
     x = self.fc3(x)
     return x
 ```
+
+

@@ -16,73 +16,94 @@ import shutil
 
 from explain_models import ModelLoader, Explainer
 
+# Initialize parameters
+# Define folder that contains model, loaded models will be extracted to models_folder_name .
+models_folder_name = "models/"
+explain_image_folder = "exp_images/"
+explanation_methods = ["GradCam","XGradCam","EigenCam","AblationCam","ScoreCam","GradCam++"]
+
+
 
 st.set_page_config(layout="wide")
 sns.set_style('whitegrid')
 
-
-
-
-
-
+# There'll be two pages, one for explaining  model, second for loading model.
 my_page = st.sidebar.radio('Page Navigation', ['Explain Model', 'Load Model'])
+
 if my_page == 'Explain Model':
 
-    
-    models_folder_name = "models/"
     directories_in_models = os.listdir(models_folder_name) 
-
-    matplotlib.use("agg")
-
-    _lock = RendererAgg.lock
-
-
-    row0_spacer1, row0_1, row0_spacer2, row0_2, row0_spacer3 = st.columns(
+    # Zeroth Row
+    page_1_row0_spacer1, page_1_row0_1, page_1_row0_spacer2, page_1_row0_2, page_1_row0_spacer3 = st.columns(
         (.1, 2, .2, 1, .1))
-    row0_1.title('Explain Model')
-
-
-    row1_spacer1, row1_1, row1_spacer2 = st.columns((.1, 3.2, .1))
-    with row1_1:
+    page_1_row0_1.title('Explain Model')
+    
+    # First Row
+    page_1_row1_spacer1, page_1_row1_1, page_1_row1_spacer2 = st.columns((.1, 3.2, .1))
+    with page_1_row1_1:
         st.markdown("Explain PyTorch models with various methods.")
-        st.markdown(
-            "**For contact: mburaksayici@gmail.com")
 
-    row2_spacer1, row2_1, row2_spacer2 = st.columns((.1, 3.2, .1))
-
-
-    row3_spacer1, row3_1, row3_spacer2 = st.columns((.1, 3.2, .1))
-
-
-
-
-    with row2_1:
+    # Second Row
+    page_1_row2_spacer1, page_1_row2_1, page_1_row2_spacer2 = st.columns((.1, 3.2, .1))
+    
+    with page_1_row2_1:
         selected_model = st.selectbox("Select model", tuple(directories_in_models))
         selected_model += "/"
-        #row2_spacer2.title(selected_model)
-
-        ### Load Model 
+        
+        # Load Model 
         model_loader = ModelLoader(models_folder_name+selected_model)
         model,class_dict,transform_func = model_loader.get_params()
         inv_class_dict =  {value:key for key, value in class_dict.items()}
+        imgs_folder = models_folder_name+selected_model+"exp_images/"
+        if not os.path.exists(imgs_folder):
+            os.makedirs(imgs_folder)
 
-        model.eval()
-
-    img_path = "/Users/mehmetburaksayici/Desktop/Projects/expmed/data/hymenoptera_data/train/ants/1917341202_d00a7f9af5.jpg"
+    # Call explainer
     explain_model = Explainer(model,class_dict)
-
     explain_model.set_dataloader(transform_func)
-    explain_model.set_image_path(img_path)
-    explain_model.transform_image()
+    conv_layers = explain_model.get_conv_layers()
+    conv_layers.reverse()
+    # Obtain conv layers, in order to select at dropdown list
+    conv_name_dict = dict(zip([str(i) for i in conv_layers],conv_layers))    
+    
+    
+    
+    page_1_row3_spacer1, page_1_row3_1, page_1_row3_spacer2 = st.columns((.1, 3.2, .1))
+    with page_1_row3_1:
+        #  Select Conv layer 
+        selected_conv_layer_key = st.selectbox("Select Target CNN Layer, ordered from end to beginning of network", options =list(conv_name_dict.keys()))
+        selected_conv_layer = conv_name_dict[selected_conv_layer_key]
+        #  Select Explanation Method 
+        selected_exp_method = st.selectbox("Select Explanation Method", explanation_methods)
+        selected_class = st.selectbox("Select Class", list(class_dict.values()))
+        #  Select Class to Explain  
+        selected_class_index = int(inv_class_dict[selected_class])
+        explain_model.set_target_layers(selected_conv_layer)
+        
+        
+        
+        mode_selection = st.radio('Load Image or Select from Disk', ["Load Image","Select Image"])
 
-    explanation_method = ["GradCam","XGradCam","EigenCam","AblationCam","ScoreCam","GradCam++"]
-    with row3_1:
+        if mode_selection == "Load Image":
+            # Upload Image, save to disk
+            uploaded_img = st.file_uploader('Upload Image', type=["jpg","jpeg","png","JPG","JPEG"])
+            if (uploaded_img is not None):
+                uploaded_img_path = models_folder_name+selected_model+explain_image_folder+uploaded_img.name
+                with open(os.path.join(imgs_folder,uploaded_img.name),"wb") as f:
+                    f.write(uploaded_img.getbuffer())
+                    st.success("Saved File:{} to {}".format(uploaded_img.name,imgs_folder))
+            explain_image = uploaded_img_path
+        elif mode_selection == "Select Image":
+            explain_images = os.listdir(models_folder_name+selected_model+explain_image_folder)
+            selected_image = st.selectbox("Select Image", explain_images)
+            explain_image = models_folder_name+selected_model+explain_image_folder+selected_image
+        
+         #selected_image
+        # Set image path, transform
+        explain_model.set_image_path(explain_image)
+        explain_model.transform_image()
 
-        selected_exp_method = st.selectbox("Select Explanation Method", explanation_method)
-        selected_class = st.selectbox("Select Class",     list(class_dict.values()))
-
-        selected_class_index = inv_class_dict[selected_class]
-
+        # Explain image
         if selected_exp_method == "XGradCam":
             cam_mask = explain_model.xgradcam_explainer(selected_class_index)
         elif selected_exp_method == "GradCam":
@@ -96,13 +117,26 @@ if my_page == 'Explain Model':
         elif selected_exp_method == "GradCam++":
             cam_mask = explain_model.gradcamplusplus_explainer(selected_class_index)
 
-
+        # Get visualization
         vis = explain_model.visualize_with_mask(cam_mask)
-        #plt.imshow(vis)
-        st.image([explain_model.raw_image,vis], caption=["Raw Image","Explanation"], width=vis.shape[0], use_column_width=None, clamp=False, channels='RGB', output_format='auto')
+        
+        # Obtain prediction
+        predicted_class = explain_model.predict()
+        
+        # Display prediction and image
+        st.markdown("Model Prediction: {}".format(predicted_class))
+        st.image([explain_model.raw_image.resize((vis.shape[0],vis.shape[1])),vis], caption=["Raw Image","Explanation"], width=vis.shape[0], use_column_width=None, clamp=False, channels='RGB', output_format='auto')
 
 
-    
+
+        
+        
+        
+        
+        
+        
+        
+        
 else:
     page_2_row0_spacer1, page_2_row0_1, page_2_row0_spacer2, page_2_row0_2, page_2_row0_spacer3 = st.columns(
         (.1, 2, .2, 1, .1))

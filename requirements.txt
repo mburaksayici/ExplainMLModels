@@ -48,12 +48,13 @@ seaborn==0.11.2
 smmap==4.0.0
 streamlit==0.88.0
 surprise==0.1
-torchcam==0.2.0
-torchvision==0.10.0+cpu 
-torchaudio==0.9.0
 tqdm
-torch==1.9.0+cpu
 traitlets==4.3.3
 ttach==0.0.3
 tzlocal==3.0
 websocket-client==1.2.1
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==1.9.0+cpu
+torchvision==0.10.0+cpu 
+torchaudio==0.9.0
+

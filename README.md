@@ -1,13 +1,14 @@
 # ExplainMLModels
 Explain ML Models with streamlit app, using GradCam methods.
 
+![image description](http://www.giphy.com/gifs/TDNLFLCXfgf41w1kJO)
+
+
 Demo:
 https://explainpytorch.herokuapp.com/
 
-
-
 ## Upload Model
-Models should be uploaded in a zip file. An example of the folder that could be extracted is model_mnist file in this repository. Zip file must contain a single main folder having a model name, and this folder must contain: 
+Models should be uploaded in a zip file. An example of the folder that could be zipped is model_mnist folder inside models folder. Zip file must contain a single main folder having a model name, and this folder must contain: 
 
 * class_dict.pkl : Dictionary that contains index of prediction and corresponding class. If model predictions are in form of 0,1,2; class_dict.pkl should be ```{0: "Class A", 1:"Class B", 2:"Class C"}```
 
@@ -30,6 +31,7 @@ return data_transforms(Image.open(image_path))
 * model.pyt : model file that has .pyt fiel extension, saved by torch.save(model.state_dict(),"model.pyt") . You can edit the extension of saved Python models as .pyt, instead of .pkl, which will make it work. 
 
 * model_script.py : model script that includes class,which strictly having name "Model", in such a format: 
+
 ```
 import torch
 import torch.nn as nn
@@ -56,6 +58,3 @@ def forward(self, x):
     x = self.fc3(x)
     return x
 ```
-
-
-

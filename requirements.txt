@@ -1,29 +1,20 @@
 absl-py==0.13.0
 altair==4.1.0
-appnope @ file:///Users/runner/miniforge3/conda-bld/appnope_1610094673091/work
-argon2-cffi @ file:///Users/runner/miniforge3/conda-bld/argon2-cffi_1625821444797/work
 asgiref==3.4.1
 astor==0.8.1
 astunparse==1.6.3
 async-generator==1.10
 atari-py==0.2.6
-attrs @ file:///home/conda/feedstock_root/build_artifacts/attrs_1620387926260/work
-backcall @ file:///home/conda/feedstock_root/build_artifacts/backcall_1592338393461/work
-backports.functools-lru-cache @ file:///home/conda/feedstock_root/build_artifacts/backports.functools_lru_cache_1618230623929/work
 backports.zoneinfo==0.2.1
 base58==2.1.0
-bleach @ file:///home/conda/feedstock_root/build_artifacts/bleach_1628022386512/work
 blinker==1.4
 brotlipy==0.7.0
 cached-property==1.5.2
 cachetools==4.2.2
 certifi==2021.5.30
-cffi @ file:///Users/runner/miniforge3/conda-bld/cffi_1625835327798/work
-chardet @ file:///Users/runner/miniforge3/conda-bld/chardet_1610093460760/work
 charset-normalizer==2.0.4
 click==7.1.2
 decorator==4.4.2
-defusedxml @ file:///home/conda/feedstock_root/build_artifacts/defusedxml_1615232257335/work
 docopt==0.6.2
 flatbuffers==1.12
 fsspec==2021.8.1
@@ -38,7 +29,7 @@ idna==3.2
 importlib-resources==5.2.2
 isodate==0.6.0
 numba==0.53.1
-numpy @ file:///Users/runner/miniforge3/conda-bld/numpy_1626681957552/work
+numpy
 oauthlib==3.1.1
 opt-einsum==3.3.0
 pandas==1.1.5

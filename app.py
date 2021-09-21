@@ -104,6 +104,7 @@ if my_page == 'Explain Model':
         explain_model.transform_image()
 
         # Explain image
+        progress_bar = st.progress(0)
         if selected_exp_method == "XGradCam":
             cam_mask = explain_model.xgradcam_explainer(selected_class_index)
         elif selected_exp_method == "GradCam":
@@ -111,12 +112,15 @@ if my_page == 'Explain Model':
         elif selected_exp_method == "EigenCam":
             cam_mask = explain_model.eigencam_explainer(selected_class_index)
         elif selected_exp_method == "AblationCam":
+            progress_bar.progress(50) ## For now, it's a hack for slow grad-cam methods. It can be better represented with remaining time.
             cam_mask = explain_model.ablationcam_explainer(selected_class_index)
         elif selected_exp_method == "ScoreCam":
+            progress_bar.progress(50) ## For now, it's a hack for slow grad-cam methods. It can be better represented with remaining time.
             cam_mask = explain_model.scorecam_explainer(selected_class_index)
-        elif selected_exp_method == "GradCam++":
+        elif selected_exp_method == "GradCam++": 
             cam_mask = explain_model.gradcamplusplus_explainer(selected_class_index)
-
+        progress_bar.progress(100)
+        progress_bar.empty()
         # Get visualization
         vis = explain_model.visualize_with_mask(cam_mask)
         
